@@ -6,6 +6,7 @@ from account.models import Account as UserAccount
 from datacaptureapp.GeoJsonBuilder import *
 from django import forms
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 
 from decimal import Decimal
@@ -129,3 +130,13 @@ def profile(request):
 @login_required()
 def newprofile(request):
     return render(request, 'datacaptureapp/NewProfile.html', {})
+
+
+def register(response):
+    if response.method == "POST":
+        form = UserCreationForm(response.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = UserCreationForm()
+    return render(response, "registration/register.html", {'form': form})
